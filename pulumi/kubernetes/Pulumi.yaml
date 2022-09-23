@@ -1,0 +1,6 @@
+name: pl-k8s-py-jen
+description: A Pulumi Kubernetes Python program integrated with Jenkins
+runtime:
+    name: python
+    options:
+        virtualenv: venv
