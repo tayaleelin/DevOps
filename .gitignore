@@ -2,3 +2,4 @@
 venv/
 *.dev.yaml
 *node_modules/
+*DS_Store
