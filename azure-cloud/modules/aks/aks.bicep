@@ -26,6 +26,9 @@ param linuxAdminUsername string
 @description('Configure all linux machines with the SSH RSA public key string. Your key should include three parts, for example \'ssh-rsa AAAAB...snip...UcyupgH azureuser@linuxvm\'')
 param sshRSAPublicKey string
 
+@description('Add authorized IP range for API server')
+param authorizedIpRange string = ''
+
 resource aks 'Microsoft.ContainerService/managedClusters@2022-05-02-preview' = {
   name: clusterName
   location: location
@@ -53,6 +56,11 @@ resource aks 'Microsoft.ContainerService/managedClusters@2022-05-02-preview' = {
           }
         ]
       }
+    }
+    apiServerAccessProfile: {
+      authorizedIPRanges: [
+        authorizedIpRange
+      ]
     }
   }
 }
