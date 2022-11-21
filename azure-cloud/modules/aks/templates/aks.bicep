@@ -29,6 +29,8 @@ param sshRSAPublicKey string
 @description('Add authorized IP range for API server')
 param authorizedIpRange string = ''
 
+param clusterOsImage string = 'mariner'
+
 resource aks 'Microsoft.ContainerService/managedClusters@2022-05-02-preview' = {
   name: clusterName
   location: location
@@ -41,6 +43,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2022-05-02-preview' = {
       {
         name: 'agentpool'
         osDiskSizeGB: osDiskSizeGB
+        osSKU: clusterOsImage
         count: agentCount
         vmSize: agentVMSize
         osType: 'Linux'
