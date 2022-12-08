@@ -35,7 +35,6 @@ param clusterOsImage string = 'mariner'
 
 param kubernetesVersion string
 
-param enableAzureRBAC bool = false
 param enableAutoScaling bool = true
 param agentMaxCount int
 
@@ -46,9 +45,6 @@ resource aks 'Microsoft.ContainerService/managedClusters@2022-05-02-preview' = {
     type: 'SystemAssigned'
   }
   properties: {
-    aadProfile: {
-      enableAzureRBAC: enableAzureRBAC
-    }
     agentPoolProfiles: [
       {
         name: 'agentpool'
