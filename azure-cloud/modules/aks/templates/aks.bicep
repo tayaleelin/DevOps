@@ -59,6 +59,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2022-05-02-preview' = {
         osType: 'Linux'
         mode: 'System'
         enableAutoScaling: enableAutoScaling
+        minCount: 1
       }
     ]
     apiServerAccessProfile: {
