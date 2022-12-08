@@ -35,7 +35,7 @@ param clusterOsImage string = 'mariner'
 
 param kubernetesVersion string
 
-param enableAzureRBAC bool = true
+param enableAzureRBAC bool = false
 param enableAutoScaling bool = true
 param agentMaxCount int
 
