@@ -12,6 +12,8 @@ param dnsPrefix string
 @maxValue(1023)
 param osDiskSizeGB int = 0
 
+param osDiskType string = 'Managed'
+
 @description('The number of nodes for the cluster.')
 @minValue(1)
 @maxValue(50)
@@ -31,6 +33,11 @@ param authorizedIpRange string = ''
 
 param clusterOsImage string = 'mariner'
 
+param kubernetesVersion string
+
+param enableAzureRBAC bool = true
+param enableAutoScaling bool = true
+
 resource aks 'Microsoft.ContainerService/managedClusters@2022-05-02-preview' = {
   name: clusterName
   location: location
@@ -38,18 +45,28 @@ resource aks 'Microsoft.ContainerService/managedClusters@2022-05-02-preview' = {
     type: 'SystemAssigned'
   }
   properties: {
-    dnsPrefix: dnsPrefix
+    aadProfile: {
+      enableAzureRBAC: enableAzureRBAC
+    }
     agentPoolProfiles: [
       {
         name: 'agentpool'
         osDiskSizeGB: osDiskSizeGB
+        osDiskType: osDiskType
         osSKU: clusterOsImage
         count: agentCount
         vmSize: agentVMSize
         osType: 'Linux'
         mode: 'System'
+        enableAutoScaling: enableAutoScaling
       }
     ]
+    apiServerAccessProfile: {
+      authorizedIPRanges: [
+        authorizedIpRange
+      ]
+    }
+    dnsPrefix: dnsPrefix
     linuxProfile: {
       adminUsername: linuxAdminUsername
       ssh: {
@@ -60,11 +77,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2022-05-02-preview' = {
         ]
       }
     }
-    apiServerAccessProfile: {
-      authorizedIPRanges: [
-        authorizedIpRange
-      ]
-    }
+    kubernetesVersion: kubernetesVersion
   }
 }
 
