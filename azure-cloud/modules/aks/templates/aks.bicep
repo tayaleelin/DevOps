@@ -37,6 +37,7 @@ param kubernetesVersion string
 
 param enableAzureRBAC bool = true
 param enableAutoScaling bool = true
+param agentMaxCount int
 
 resource aks 'Microsoft.ContainerService/managedClusters@2022-05-02-preview' = {
   name: clusterName
@@ -60,6 +61,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2022-05-02-preview' = {
         mode: 'System'
         enableAutoScaling: enableAutoScaling
         minCount: 1
+        maxCount: agentMaxCount
       }
     ]
     apiServerAccessProfile: {
