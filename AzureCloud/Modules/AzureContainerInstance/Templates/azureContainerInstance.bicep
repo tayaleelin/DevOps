@@ -30,7 +30,7 @@ param memoryInGb int = 2
 ])
 param restartPolicy string = 'Always'
 
-var name = 'aci${osType}${namePrefix}'
+var name = toLower('aci${osType}${namePrefix}')
 
 resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01' = {
   name: name
