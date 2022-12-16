@@ -2,6 +2,8 @@ import pulumi
 from pulumi_azure_native import storage
 from pulumi_azure_native import resources
 
+# Pulumi code wrapped in function
+
 
 def PublishWebsite():
     print('I am publishing something')
