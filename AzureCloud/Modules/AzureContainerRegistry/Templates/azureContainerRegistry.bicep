@@ -9,6 +9,10 @@ param location string = resourceGroup().location
 @description('Provide a tier of your Azure Container Registry.')
 param acrSku string = 'Basic'
 
+param adminUserEnabled bool
+
+param anonymousPullEnabled bool
+
 var acrName = 'acr${namePrefix}${substring(uniqueString(resourceGroup().id), 0, 6)}'
 
 resource acrResource 'Microsoft.ContainerRegistry/registries@2021-06-01-preview' = {
@@ -18,7 +22,8 @@ resource acrResource 'Microsoft.ContainerRegistry/registries@2021-06-01-preview'
     name: acrSku
   }
   properties: {
-    adminUserEnabled: false
+    adminUserEnabled: adminUserEnabled
+    anonymousPullEnabled: anonymousPullEnabled
   }
 }
 
