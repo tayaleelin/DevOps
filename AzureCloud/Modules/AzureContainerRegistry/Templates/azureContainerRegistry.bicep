@@ -12,7 +12,11 @@ param acrSku string = 'Basic'
 param adminUserEnabled bool = false
 param anonymousPullEnabled bool = false
 
+@description('Default pull role guid for ACR permissions')
+param acrRoleGuid string = '7f951dda-4ed3-4680-a7ca-43fe172d538d'
+
 var acrName = 'acr${namePrefix}${substring(uniqueString(resourceGroup().id), 0, 6)}'
+var acrRoleDefinitionId = '/providers/Microsoft.Authorization/roleDefinitions/${acrRoleGuid}'
 
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
   name: 'acr${namePrefix}-mi'
@@ -29,6 +33,19 @@ resource acrResource 'Microsoft.ContainerRegistry/registries@2021-06-01-preview'
   properties: {
     adminUserEnabled: adminUserEnabled
     anonymousPullEnabled: ((acrSku != 'basic' && anonymousPullEnabled) ? anonymousPullEnabled : false)
+  }
+}
+
+resource roleDefinition 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
+  name: acrRoleDefinitionId
+}
+
+resource roleAssignmentContainerRegistry 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = {
+  name: guid(managedIdentity.id, acrResource.id, acrRoleDefinitionId)
+  scope: acrResource
+  properties: {
+    principalId: managedIdentity.properties.principalId
+    roleDefinitionId: roleDefinition.id
   }
 }
 
