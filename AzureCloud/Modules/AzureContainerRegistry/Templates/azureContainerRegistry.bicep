@@ -9,7 +9,7 @@ param location string = resourceGroup().location
 @description('Provide a tier of your Azure Container Registry.')
 param acrSku string = 'Basic'
 
-param adminUserEnabled bool
+param adminUserEnabled bool = false
 
 param anonymousPullEnabled bool = false
 
