@@ -25,7 +25,9 @@ resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-
 
 resource acrResource 'Microsoft.ContainerRegistry/registries@2021-06-01-preview' = {
   name: acrName
-  identity: managedIdentity
+  identity: {
+    userAssignedIdentities: managedIdentity
+  }
   location: location
   sku: {
     name: acrSku
