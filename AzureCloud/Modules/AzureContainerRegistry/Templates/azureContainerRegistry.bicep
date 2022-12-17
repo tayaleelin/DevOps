@@ -11,7 +11,7 @@ param acrSku string = 'Basic'
 
 param adminUserEnabled bool
 
-param anonymousPullEnabled bool
+param anonymousPullEnabled bool = false
 
 var acrName = 'acr${namePrefix}${substring(uniqueString(resourceGroup().id), 0, 6)}'
 
@@ -23,7 +23,7 @@ resource acrResource 'Microsoft.ContainerRegistry/registries@2021-06-01-preview'
   }
   properties: {
     adminUserEnabled: adminUserEnabled
-    anonymousPullEnabled: (acrSku != 'basic' && anonymousPullEnabled ? anonymousPullEnabled : false)
+    anonymousPullEnabled: ((acrSku != 'basic' && anonymousPullEnabled) ? anonymousPullEnabled : false)
   }
 }
 
