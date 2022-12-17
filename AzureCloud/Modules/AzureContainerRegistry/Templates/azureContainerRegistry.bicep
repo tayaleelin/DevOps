@@ -10,13 +10,18 @@ param location string = resourceGroup().location
 param acrSku string = 'Basic'
 
 param adminUserEnabled bool = false
-
 param anonymousPullEnabled bool = false
 
 var acrName = 'acr${namePrefix}${substring(uniqueString(resourceGroup().id), 0, 6)}'
 
+resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
+  name: 'acr${namePrefix}-mi'
+  location: location
+}
+
 resource acrResource 'Microsoft.ContainerRegistry/registries@2021-06-01-preview' = {
   name: acrName
+  identity: managedIdentity
   location: location
   sku: {
     name: acrSku
@@ -29,3 +34,8 @@ resource acrResource 'Microsoft.ContainerRegistry/registries@2021-06-01-preview'
 
 @description('Output the login server property for later use')
 output loginServer string = acrResource.properties.loginServer
+output principalId object = {
+  principalId: acrResource.identity.principalId
+  clientId: acrResource.identity.tenantId
+  type: acrResource.identity.type
+}
