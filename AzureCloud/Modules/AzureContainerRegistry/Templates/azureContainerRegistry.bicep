@@ -23,7 +23,7 @@ resource acrResource 'Microsoft.ContainerRegistry/registries@2021-06-01-preview'
   }
   properties: {
     adminUserEnabled: adminUserEnabled
-    anonymousPullEnabled: anonymousPullEnabled
+    anonymousPullEnabled: (acrSku != 'basic' && anonymousPullEnabled ? anonymousPullEnabled : false)
   }
 }
 
