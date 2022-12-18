@@ -42,7 +42,7 @@ resource roleDefinition 'Microsoft.Authorization/roleDefinitions@2022-04-01' exi
 }
 
 resource roleAssignmentContainerRegistry 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = {
-  name: guid(managedIdentity.id, acrResource.id, acrRoleDefinitionId)
+  name: guid(managedIdentity.id, acrResource.id, roleDefinition.id)
   scope: acrResource
   properties: {
     principalId: managedIdentity.properties.principalId
