@@ -16,7 +16,6 @@ param anonymousPullEnabled bool = false
 param acrRoleGuid string = '7f951dda-4ed3-4680-a7ca-43fe172d538d'
 
 var acrName = 'acr${namePrefix}${substring(uniqueString(resourceGroup().id), 0, 6)}'
-var acrRoleDefinitionId = '/providers/Microsoft.Authorization/roleDefinitions/${acrRoleGuid}'
 
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
   name: 'acr${namePrefix}-mi'
