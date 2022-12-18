@@ -24,9 +24,6 @@ resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-
 
 resource acrResource 'Microsoft.ContainerRegistry/registries@2021-06-01-preview' = {
   name: acrName
-  identity: {
-    userAssignedIdentities: managedIdentity
-  }
   location: location
   sku: {
     name: acrSku
@@ -53,8 +50,3 @@ resource roleAssignmentContainerRegistry 'Microsoft.Authorization/roleAssignment
 
 @description('Output the login server property for later use')
 output loginServer string = acrResource.properties.loginServer
-output principalId object = {
-  principalId: acrResource.identity.userAssignedIdentities.properties.principalId
-  clientId: acrResource.identity.userAssignedIdentities.properties.clientId
-  type: acrResource.identity.type
-}
