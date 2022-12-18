@@ -36,7 +36,7 @@ resource acrResource 'Microsoft.ContainerRegistry/registries@2021-06-01-preview'
 }
 
 resource roleDefinition 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
-  name: acrRoleDefinitionId
+  name: acrRoleGuid
 }
 
 resource roleAssignmentContainerRegistry 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = {
@@ -45,6 +45,7 @@ resource roleAssignmentContainerRegistry 'Microsoft.Authorization/roleAssignment
   properties: {
     principalId: managedIdentity.properties.principalId
     roleDefinitionId: roleDefinition.id
+    principalType: 'ServicePrincipal'
   }
 }
 
