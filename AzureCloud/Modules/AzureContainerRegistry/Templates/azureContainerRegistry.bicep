@@ -50,3 +50,4 @@ resource roleAssignmentContainerRegistry 'Microsoft.Authorization/roleAssignment
 
 @description('Output the login server property for later use')
 output loginServer string = acrResource.properties.loginServer
+output acrName string = acrResource.name
