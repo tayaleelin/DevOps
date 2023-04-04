@@ -81,6 +81,9 @@ param autoUpgradeChannel string = 'stable'
 
 @description('Enter an instance type for the system node pool')
 param vmSizePlatform string = 'Standard_DS2_v2'
+
+param vnetAddressPrefix string = '10.0.0.0/16'
+param subnetAddressPrefix string = '10.0.0.0/24'
 // ============================================================================
 // Variables
 
@@ -101,7 +104,7 @@ var clusterName = 'aks-${clusterPostfix}'
 var policyName = 'aks-${clusterPostfix}-policy'
 
 // Name of the Vnet
-var vnetName = 'vnet'
+var vnetName = 'vnet-${clusterPostfix}'
 
 // Name of the subnet. Worker nodes of the cluster are places here
 var subnetName = 'aks-${clusterPostfix}-sn'
@@ -114,8 +117,24 @@ var policySetRestrictive = '/providers/Microsoft.Authorization/policySetDefiniti
 // Resources
 
 // Subnet used for worker nodes
-resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-03-01' existing = {
-  name: '${vnetName}/${subnetName}'
+resource vnet 'Microsoft.Network/virtualNetworks@2022-09-01' = {
+  name: vnetName
+  location: location
+  properties: {
+    addressSpace: {
+      addressPrefixes: [
+        vnetAddressPrefix
+      ]
+    }
+    subnets: [
+      {
+        name: subnetName
+        properties: {
+          addressPrefix: subnetAddressPrefix
+        }
+      }
+    ]
+  }
 }
 
 // Azure policies for AKS
@@ -174,7 +193,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2022-11-01' = {
         vmSize: vmSizePlatform
         osDiskSizeGB: osDiskSizeGB
         osDiskType: osDiskType
-        vnetSubnetID: subnet.id
+        vnetSubnetID: vnet.properties.subnets[0].id
         osType: 'Linux'
         osSKU: clusterOsImage
         maxCount: maxNodeCount
