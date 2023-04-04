@@ -52,7 +52,7 @@ param clusterOsImage string = 'mariner'
 @description('Cluster postfix')
 param clusterPostfix string
 
-param kubernetesVersion string = '1.26'
+param kubernetesVersion string = '1.26.0'
 
 @description('Default location of the resource group')
 param location string
