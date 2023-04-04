@@ -193,7 +193,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2023-02-01' = {
     autoUpgradeProfile: {
       upgradeChannel: autoUpgradeChannel
     }
-    nodeResourceGroup: resourceGroup().name
+    nodeResourceGroup: '${substring(resourceGroup().name, 0, length(resourceGroup().name) - 3)}-noderesources-rg'
     networkProfile: {
       loadBalancerSku: 'standard'
       networkPlugin: 'azure'
