@@ -83,7 +83,7 @@ param autoUpgradeChannel string = 'stable'
 param vmSizePlatform string = 'Standard_DS2_v2'
 
 param vnetAddressPrefix string = '10.0.0.0/16'
-param subnetAddressPrefix string = '10.0.0.1/24'
+param subnetAddressPrefix string = '10.0.1.0/22'
 // ============================================================================
 // Variables
 
