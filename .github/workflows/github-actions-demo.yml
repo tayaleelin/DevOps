@@ -1,6 +1,8 @@
 name: Test Workflow
 run-name: GitHub Actions Demo
-on: [push]
+on:
+  push:
+    branches: [ actions ]
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
