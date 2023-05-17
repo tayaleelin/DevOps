@@ -29,7 +29,7 @@ param linuxAdminUsername string
 param sshRSAPublicKey string
 
 @description('Add authorized IP range for API server')
-param authorizedIpRange string = ''
+param authorizedIpRange string = '*'
 
 param clusterOsImage string = 'mariner'
 
