@@ -6,19 +6,19 @@ run-name: Build and Deploy Azure Web App with Node.js
 
 on:
   push:
-    branches:
-      - sample-app
-  workflow_dispatch:
+    branches: [sample-app]
 
 env:
-  NODE_VERSION: '18.x'
+  AZURE_WEBAPP_NAME: ldinitexpress0123amsus
+  AZURE_WEBAPP_PACKAGE_PATH: "./AzureCloud/Tutorials/WebApps/myExpressApp"
+  NODE_VERSION: "18.x"
 
 jobs:
   build-and-deploy:
     name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@v3
       - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v2
         with:
@@ -28,12 +28,11 @@ jobs:
           npm install
           npm run build --if-present
           npm run test --if-present
-        working-directory: ${{ github.workspace }}/AzureCloud/Tutorials/WebApps/myExpressApp
-      - name: 'Deploy to Azure Web App'
+        working-directory: ${{ env.AZURE_WEBAPP_PACKAGE_PATH}}
+      - name: "Deploy to Azure Web App"
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'ldinitexpress0123amsus'
-          slot-name: 'Production'
+          app-name: ${{ env.AZURE_WEBAPP_NAME}}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
