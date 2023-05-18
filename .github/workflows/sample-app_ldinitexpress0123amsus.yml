@@ -7,11 +7,10 @@ run-name: Build and Deploy Azure Web App with Node.js
 on:
   push:
     branches: [sample-app]
-
 env:
   AZURE_WEBAPP_NAME: ldinitexpress0123amsus
   AZURE_WEBAPP_PACKAGE_PATH: "./AzureCloud/Tutorials/WebApps/myExpressApp"
-  NODE_VERSION: "18.x"
+  NODE_VERSION: "14.x"
 
 jobs:
   build-and-deploy:
@@ -19,20 +18,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      - name: npm install, build, and test
+      - name: Check and list files from checkout
         run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
-        working-directory: ${{ env.AZURE_WEBAPP_PACKAGE_PATH}}
-      - name: "Deploy to Azure Web App"
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME}}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          if [[ -f "${{ github.workspace }}/${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/package.json" ]]; 
+          then 
+            echo "The express app repository exists";
+            cd "${{ github.workspace }}/${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"; 
+            ls -al
+          fi
+      # - name: Use Node.js ${{ env.NODE_VERSION }}
+      #   uses: actions/setup-node@v2
+      #   with:
+      #     node-version: ${{ env.NODE_VERSION }}
+      # - name: npm install, build, and test
+      #   run: |
+      #     npm install
+      #     npm run build --if-present
+      #     npm run test --if-present
+      #   working-directory: ${{ env.AZURE_WEBAPP_PACKAGE_PATH}}
+      # - name: "Deploy to Azure Web App"
+      #   id: deploy-to-webapp
+      #   uses: azure/webapps-deploy@v2
+      #   with:
+      #     app-name: ${{ env.AZURE_WEBAPP_NAME}}
+      #     publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+      #     package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
