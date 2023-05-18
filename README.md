@@ -17,3 +17,7 @@ Writing code for these platforms can be done by using the code a development tea
 
 The Pulumi engine is an automation api that gives the possibility to deploy resources using multiple methods as shown in the following figure.
 ![image info](assets/images/automation-api.png)
+
+## AzureCloud
+
+The directory AzureCloud contains modules and solutions to work with Azure Resources. The modules were mainly built with Bicep and are combined with Resource Modules from [Azure/ResourceModules](https://github.com/Azure/ResourceModules). This allows me to work on my configuration and test environments for providing in-depth knowledge.
