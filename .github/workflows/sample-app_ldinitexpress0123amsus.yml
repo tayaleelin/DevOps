@@ -28,7 +28,7 @@ jobs:
           npm install
           npm run build --if-present
           npm run test --if-present
-        working-directory: ../AzureCloud/Tutorials/WebApps/myExpressApp
+        working-directory: /AzureCloud/Tutorials/WebApps/myExpressApp
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
