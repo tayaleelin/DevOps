@@ -6,7 +6,10 @@ run-name: Build and Deploy Azure Web App with Node.js
 
 on:
   push:
-    branches: [sample-app]
+    branches: [main]
+    paths:
+      - "AzureCloud/Tutorials/WebApps/myExpressApp/**"
+
 env:
   AZURE_WEBAPP_NAME: ldinitexpress0123amsus
   AZURE_WEBAPP_PACKAGE_PATH: "./AzureCloud/Tutorials/WebApps/myExpressApp"
