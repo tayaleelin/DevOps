@@ -20,4 +20,5 @@ The Pulumi engine is an automation api that gives the possibility to deploy reso
 
 ## AzureCloud
 
-The directory AzureCloud contains modules and solutions to work with Azure Resources. The modules were mainly built with Bicep and are combined with Resource Modules from [Azure/ResourceModules](https://github.com/Azure/ResourceModules). This allows me to work on my configuration and test environments for providing in-depth knowledge.
+The directory AzureCloud contains modules and solutions to work with Azure Resources. The modules were mainly built with Bicep and are combined with Resource Modules from [Azure/ResourceModules](https://github.com/Azure/ResourceModules). 
+This allows me to work on my configuration and test environments for providing in-depth knowledge.

@@ -158,7 +158,7 @@ resource aks_policies 'Microsoft.Authorization/policyAssignments@2020-09-01' = i
 }
 
 // AKS controle plane and agent pool
-resource aks 'Microsoft.ContainerService/managedClusters@2022-11-01' = {
+resource aks 'Microsoft.ContainerService/managedClusters@2023-03-01' = {
   name: clusterName
   location: location
   sku: {
