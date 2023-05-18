@@ -4,3 +4,5 @@ venv/
 *node_modules/
 *DS_Store
 .history
+.azure
+package*.json
