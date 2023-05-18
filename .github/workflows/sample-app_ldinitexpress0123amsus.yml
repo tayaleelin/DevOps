@@ -13,7 +13,7 @@ on:
 env:
   AZURE_WEBAPP_NAME: ldinitexpress0123amsus
   AZURE_WEBAPP_PACKAGE_PATH: "./AzureCloud/Tutorials/WebApps/myExpressApp"
-  NODE_VERSION: "14.x"
+  NODE_VERSION: "18.x"
 
 jobs:
   build-and-deploy:
