@@ -15,6 +15,14 @@ jobs:
         with:
           azcliversion: 2.0.72
           inlineScript: az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Create AKS DNS
+        uses: azure/aks-dns@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+          cluster-name: ${{ secrets.AZURE_AKS_CLUSTER_NAME }}
+          dns-name: ${{ secrets.AZURE_AKS_DNS_NAME }}
+          location: ${{ secrets.AZURE_LOCATION }}
       # - name: Create AKS cluster
       #   uses: azure/aks-create@v1
       #   with:
@@ -27,7 +35,7 @@ jobs:
       #     agent-vm-size: ${{ secrets.AZURE_AKS_AGENT_VM_SIZE }}
       #     service-principal: ${{ secrets.AZURE_AKS_SERVICE_PRINCIPAL }}
       #     client-secret: ${{ secrets.AZURE_AKS_CLIENT_SECRET }}
-      #     ssh-publickey: ${{ secrets.AZURE_AKS_SSH_PUBLICKEY }}
+      # ssh-publickey: ${{ secrets.AZURE_AKS_SSH_PUBLICKEY }}
       # - name: Deploy to AKS
       #   uses: azure/aks-set-context@v1
       #   with:
