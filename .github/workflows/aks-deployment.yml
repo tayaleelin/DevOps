@@ -10,13 +10,14 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: Set active account
-        uses: azure/CLI@v1
-        with:
-          azcliversion: 2.0.72
-          inlineScript: az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       - name: Create AKS cluster
         uses: azure/CLI@v1
         with:
-          azcliversion: 2.0.72
-          inlineScript: az aks create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name ${{ secrets.AZURE_AKS_CLUSTER_NAME }} --node-count 1 --enable-addons monitoring --generate-ssh-keys
+          azcliversion: 2.29.0
+          inlineScript: |
+            az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+            az aks create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+              --name ${{ secrets.AZURE_AKS_CLUSTER_NAME }} \
+              --node-count 1 --enable-addons monitoring \
+              --kubernetes-version ${{ secrets.AZURE_AKS_KUBERNETES_VERSION }} \
+              --enable-aad --aad-admin-group-object-ids ${{ secrets.AZURE_AKS_AAD_ADMIN_GROUP_OBJECT_IDS }} \
