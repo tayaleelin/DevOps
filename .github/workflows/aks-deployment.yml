@@ -1,0 +1,28 @@
+name: Private AKS Deployment
+run-name: ${{ github.actor }} private AKS Deployment
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        name: Login to Azure
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Deploy to AKS
+        uses: azure/aks-set-context@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+          cluster-name: ${{ secrets.AZURE_AKS_CLUSTER_NAME }}
+      # - name: Deploy to AKS
+      #   uses: azure/k8s-deploy@v1
+      #   with:
+      #     manifests: |
+      #       k8s/deployment.yml
+      #       k8s/service.yml
+      #       images: |
+      #       ${{ secrets.DOCKER_HUB_USERNAME }}/private-aks-deployment:${{ github.sha }}
+      #       imagepullsecrets: |
+      #       ${{ secrets.DOCKER_HUB_USERNAME }}-dockerhub
