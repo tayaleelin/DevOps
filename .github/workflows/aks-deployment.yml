@@ -20,6 +20,4 @@ jobs:
               --name ${{ secrets.AZURE_AKS_CLUSTER_NAME }} \
               --node-count 1 --enable-addons monitoring \
               --kubernetes-version ${{ secrets.AZURE_AKS_KUBERNETES_VERSION }} \
-              --enable-aad --aad-admin-group-object-ids ${{ secrets.AZURE_AKS_AAD_ADMIN_GROUP_OBJECT_IDS }} \
-                [--aad-tenant-id ${{ secrets.AZURE_TENANT_ID }}] \
-              --no-ssh-key
+              --enable-aad --aad-admin-group-object-ids ${{ secrets.AZURE_AKS_AAD_ADMIN_GROUP_OBJECT_IDS }}
