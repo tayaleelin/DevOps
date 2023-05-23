@@ -25,3 +25,5 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
           cluster-name: ${{ secrets.AZURE_AKS_CLUSTER_NAME }}
           resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+      - name: View Kubernetes Namespaces
+        run: kubectl get ns
