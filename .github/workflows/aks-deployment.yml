@@ -1,6 +1,8 @@
 name: Deploy AKS
 run-name: ${{ github.actor }} AKS Deployment
+
 on: [push]
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -16,7 +18,7 @@ jobs:
             az aks create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
               --name ${{ secrets.AZURE_AKS_CLUSTER_NAME }} \
               --node-count 1 --enable-addons monitoring \
-              --kubernetes-version ${{ secrets.AZURE_AKS_KUBERNETES_VERSION }} \
+              --kubernetes-version  ${{ secrets.AZURE_AKS_KUBERNETES_VERSION }} \
               --enable-aad --aad-admin-group-object-ids ${{ secrets.AZURE_AKS_AAD_ADMIN_GROUP_OBJECT_IDS }} \
               --no-ssh-key
       - name: Set context to AKS
@@ -27,3 +29,9 @@ jobs:
           resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
       - name: View Kubernetes Namespaces
         run: kubectl get ns
+      - name: Helm install Otomi on AKS
+        uses: deliverybot/helm@v1
+        with:
+          release: otomi
+          chart: otomi-core
+          namespace: otomi-system
