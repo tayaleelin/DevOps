@@ -23,11 +23,10 @@ jobs:
             az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
             az group create --name ${{ secrets.AZURE_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
 
+            primaryAgentPoolProfile="["count": 1, "vmSize": "Standard_D2s_v3", "osType": "Linux", "osDiskSizeGB": 30, "type": "VirtualMachineScaleSets", "name": "primaryaks", "mode": "System", "enableAutoScaling": true, "minCount": 1, "maxCount": 1, "maxPods": 100, "nodeLabels": {"nodepool-type": "primary"}]"
             az deployment group create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --template-file ResourceModules/modules/container-service/managed-clusters/main.bicep \
-            --parameters name=${{ secrets.AZURE_AKS_CLUSTER_NAME }}
-      # primaryAgentPoolProfile=$primaryAgentPoolProfile
-      # primaryAgentPoolProfile="{"count": 1, "vmSize": "Standard_D2s_v3", "osType": "Linux", "osDiskSizeGB": 30, "type": "VirtualMachineScaleSets", "name": "primaryaks", "mode": "System", "enableAutoScaling": true, "minCount": 1, "maxCount": 1, "maxPods": 100, "nodeLabels": {"nodepool-type": "primary"}}"
+            --parameters name=${{ secrets.AZURE_AKS_CLUSTER_NAME }} primaryAgentPoolProfile="$primaryAgentPoolProfile"
       - name: Set context to AKS
         uses: azure/aks-set-context@v1
         with:
