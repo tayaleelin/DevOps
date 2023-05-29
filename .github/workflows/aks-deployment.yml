@@ -22,8 +22,7 @@ jobs:
             az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
             az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
             az group create --name ${{ secrets.AZURE_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
-      - name: Login to Azure
-        uses: azure/login@v1
+      - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: Deploy AKS Bicep
