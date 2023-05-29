@@ -22,35 +22,17 @@ jobs:
             az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
             az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
             az group create --name ${{ secrets.AZURE_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
-      - uses: azure/login@v1
+
+            primaryAgentPoolProfile='{"count": 1, "vmSize": "Standard_D2s_v3", "osType": "Linux", "osDiskSizeGB": 30, "type": "VirtualMachineScaleSets", "name": "primaryaks", "mode": "System", "enableAutoScaling": true, "minCount": 1, "maxCount": 1, "maxPods": 100, "nodeLabels": {"nodepool-type": "primary"}}'
+            az deployment group create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+              --template-file ResourceModules/modules/container-service/managed-clusters/main.bicep \
+              --parameters name=${{ secrets.AZURE_AKS_CLUSTER_NAME }} primaryAgentPoolProfile=$primaryAgentPoolProfile
+      - name: Set context to AKS
+        uses: azure/aks-set-context@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: Deploy AKS Bicep
-        uses: azure/arm-deploy@v1
-        with:
-          scope: resourcegroup
-          resourceGroupName: ${{ secrets.AZURE_RESOURCE_GROUP }}
-          template: ResourceModules/modules/container-service/managed-clusters/main.bicep
-          parameters: "name=${{ secrets.AZURE_AKS_CLUSTER_NAME }}"
-      # - name: Create AKS cluster
-      #   uses: azure/CLI@v1
-      #   with:
-      #     azcliversion: 2.29.0
-      #     inlineScript: |
-      #       az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
-      #       az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      #       az aks create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-      #         --name ${{ secrets.AZURE_AKS_CLUSTER_NAME }} \
-      #         --node-count 1 --enable-addons monitoring \
-      #         --kubernetes-version  ${{ secrets.AZURE_AKS_KUBERNETES_VERSION }} \
-      #         --enable-aad --aad-admin-group-object-ids ${{ secrets.AZURE_AKS_AAD_ADMIN_GROUP_OBJECT_IDS }} \
-      #         --no-ssh-key
-      # - name: Set context to AKS
-      #   uses: azure/aks-set-context@v1
-      #   with:
-      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
-      #     cluster-name: ${{ secrets.AZURE_AKS_CLUSTER_NAME }}
-      #     resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+          cluster-name: ${{ secrets.AZURE_AKS_CLUSTER_NAME }}
+          resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
       # - name: View Kubernetes Namespaces
       #   run: kubectl get ns
       # - name: Helm install Otomi on AKS
