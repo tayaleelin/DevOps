@@ -25,7 +25,8 @@ jobs:
       - name: Deploy AKS Bicep
         uses: azure/arm-deploy@v1
         with:
-          scope: resourcegroup
+          scope: subscription
+          region: ${{ secrets.AZURE_LOCATION }}
           resourceGroupName: ${{ secrets.AZURE_RESOURCE_GROUP }}
           template: ResourceModules/moduels/container-service/managed-clusters/main.bicep
           parameters: 'name=${{ secrets.AZURE_AKS_CLUSTER_NAME }} primaryAgentpoolProfile=[name="platform"] aksClusterKubernetesVersion=${{ secrets.AZURE_AKS_KUBERNETES_VERSION }} aadProfileAdminGroupObjectIDs=[${{ secrets.AZURE_AKS_AAD_ADMIN_GROUP_OBJECT_IDS }}]'
