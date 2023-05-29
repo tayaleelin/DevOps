@@ -22,27 +22,27 @@ jobs:
             az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
             az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
             az group create --name ${{ secrets.AZURE_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
-      - name: Deploy AKS Bicep
-        uses: azure/arm-deploy@v1
-        with:
-          scope: subscription
-          region: ${{ secrets.AZURE_LOCATION }}
-          resourceGroupName: ${{ secrets.AZURE_RESOURCE_GROUP }}
-          template: ResourceModules/modules/container-service/managed-clusters/main.bicep
-          parameters: 'name=${{ secrets.AZURE_AKS_CLUSTER_NAME }} primaryAgentpoolProfile=[name="platform"] aksClusterKubernetesVersion=${{ secrets.AZURE_AKS_KUBERNETES_VERSION }} aadProfileAdminGroupObjectIDs=[${{ secrets.AZURE_AKS_AAD_ADMIN_GROUP_OBJECT_IDS }}]'
-      - name: Create AKS cluster
-        uses: azure/CLI@v1
-        with:
-          azcliversion: 2.29.0
-          inlineScript: |
-            az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
-            az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-            az aks create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-              --name ${{ secrets.AZURE_AKS_CLUSTER_NAME }} \
-              --node-count 1 --enable-addons monitoring \
-              --kubernetes-version  ${{ secrets.AZURE_AKS_KUBERNETES_VERSION }} \
-              --enable-aad --aad-admin-group-object-ids ${{ secrets.AZURE_AKS_AAD_ADMIN_GROUP_OBJECT_IDS }} \
-              --no-ssh-key
+      - run: ls -al ResourceModules/modules/container-service/managed-clusters/main.bicep
+      # - name: Deploy AKS Bicep
+      #   uses: azure/arm-deploy@v1
+      #   with:
+      #     scope: resourcegroup
+      #     resourceGroupName: ${{ secrets.AZURE_RESOURCE_GROUP }}
+      #     template: ResourceModules/modules/container-service/managed-clusters/main.bicep
+      #     parameters: 'name=${{ secrets.AZURE_AKS_CLUSTER_NAME }} primaryAgentpoolProfile=[name="platform"] aksClusterKubernetesVersion=${{ secrets.AZURE_AKS_KUBERNETES_VERSION }} aadProfileAdminGroupObjectIDs=[${{ secrets.AZURE_AKS_AAD_ADMIN_GROUP_OBJECT_IDS }}]'
+      # - name: Create AKS cluster
+      #   uses: azure/CLI@v1
+      #   with:
+      #     azcliversion: 2.29.0
+      #     inlineScript: |
+      #       az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+      #       az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      #       az aks create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+      #         --name ${{ secrets.AZURE_AKS_CLUSTER_NAME }} \
+      #         --node-count 1 --enable-addons monitoring \
+      #         --kubernetes-version  ${{ secrets.AZURE_AKS_KUBERNETES_VERSION }} \
+      #         --enable-aad --aad-admin-group-object-ids ${{ secrets.AZURE_AKS_AAD_ADMIN_GROUP_OBJECT_IDS }} \
+      #         --no-ssh-key
       - name: Set context to AKS
         uses: azure/aks-set-context@v1
         with:
