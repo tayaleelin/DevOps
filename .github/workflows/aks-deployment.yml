@@ -21,7 +21,7 @@ jobs:
         shell: pwsh
         run: |
           $primaryAgentPoolProfile = @{ name = "nodepool1"; count = 1; vmSize = "Standard_DS2_v2"; osType = "Linux"; osDiskSizeGB = 30; type = "VirtualMachineScaleSets"; enableAutoScaling = "true"; minCount = 1; maxCount = 3; nodeLabels = @{ "agentpool" = "primary" } } | ConvertTo-Json -Depth 10
-          Write-Host "##vso[task.setvariable variable=primaryAgentPoolProfile]$primaryAgentPoolProfile"
+          echo {primaryAgentPoolProfile}={$primaryAgentPoolProfile}" >> $GITHUB_ENV
       - name: Echo primaryAgentPoolProfile
         run: echo ${{ env.primaryAgentPoolProfile }}
       # - name: Create AKS Cluster
