@@ -23,7 +23,8 @@ jobs:
           $primaryAgentPoolProfile = @{ name = "nodepool1"; count = 1; vmSize = "Standard_DS2_v2"; osType = "Linux"; osDiskSizeGB = 30; type = "VirtualMachineScaleSets"; enableAutoScaling = "true"; minCount = 1; maxCount = 3; nodeLabels = @{ "agentpool" = "primary" } } | ConvertTo-Json -Depth 10
           echo "primary_agentpool_profile=$primaryAgentPoolProfile" >> "$GITHUB_ENV"
       - name: Echo primaryAgentPoolProfile
-        run: echo ${{ env.primary_agentpool_profile }}
+        run: |
+          echo "Primary Agentpool Profile: ${{ env.primary_agentpool_profile }}"
       # - name: Create AKS Cluster
       #   uses: azure/CLI@v1
       #   with:
