@@ -18,11 +18,10 @@ jobs:
           path: ResourceModules
       # Powershell task to create the AgentPoolProfile JSON object
       - name: Create AgentPoolProfile JSON
-        uses: microsoft/PowerShell@v1
-        with:
-          pwsh: |
-            $primaryAgentPoolProfile = @{ name = "nodepool1"; count = 1; vmSize = "Standard_DS2_v2"; osType = "Linux"; osDiskSizeGB = 30; type = "VirtualMachineScaleSets"; enableAutoScaling = "true"; minCount = 1; maxCount = 3; nodeLabels = @{ "agentpool" = "primary" } } | ConvertTo-Json -Depth 10
-            Write-Host "##vso[task.setvariable variable=primaryAgentPoolProfile]$primaryAgentPoolProfile"
+        shell: pwsh
+        run: |
+          $primaryAgentPoolProfile = @{ name = "nodepool1"; count = 1; vmSize = "Standard_DS2_v2"; osType = "Linux"; osDiskSizeGB = 30; type = "VirtualMachineScaleSets"; enableAutoScaling = "true"; minCount = 1; maxCount = 3; nodeLabels = @{ "agentpool" = "primary" } } | ConvertTo-Json -Depth 10
+          Write-Host "##vso[task.setvariable variable=primaryAgentPoolProfile]$primaryAgentPoolProfile"
       - name: Create AKS Cluster
         uses: azure/CLI@v1
         with:
