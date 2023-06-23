@@ -3,6 +3,8 @@ run-name: ${{ github.actor }} AKS Deployment
 
 on: [push]
 
+env:
+  modulePath: ResourceModules/modules/container-service/managed-clusters/main.bicep
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -14,6 +16,13 @@ jobs:
         with:
           repository: Azure/ResourceModules
           path: ResourceModules
+      # Powershell task to create the AgentPoolProfile JSON object
+      - name: Create AgentPoolProfile JSON
+        uses: microsoft/PowerShell@v1
+        with:
+          pwsh: |
+            $primaryAgentPoolProfile = @{ name = "nodepool1"; count = 1; vmSize = "Standard_DS2_v2"; osType = "Linux"; osDiskSizeGB = 30; type = "VirtualMachineScaleSets"; enableAutoScaling = "true"; minCount = 1; maxCount = 3; nodeLabels = @{ "agentpool" = "primary" } } | ConvertTo-Json -Depth 10
+            Write-Host "##vso[task.setvariable variable=primaryAgentPoolProfile]$primaryAgentPoolProfile"
       - name: Create AKS Cluster
         uses: azure/CLI@v1
         with:
@@ -23,10 +32,9 @@ jobs:
             az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
             az group create --name ${{ secrets.AZURE_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
 
-            primaryAgentPoolProfile=("count"=1 "vmSize"="Standard_D2s_v3" "osType"="Linux" "osDiskSizeGB"=30 "type"="VirtualMachineScaleSets" "name"="primaryaks" "mode"="System" "enableAutoScaling"=true "minCount"=1 "maxCount"=1 "maxPods"=100 "nodeLabels"=("nodepool-type"="primary")
             az deployment group create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --template-file ResourceModules/modules/container-service/managed-clusters/main.bicep \
-            --parameters name=${{ secrets.AZURE_AKS_CLUSTER_NAME }} primaryAgentPoolProfile=${primaryAgentPoolProfile}
+            --parameters name=${{ secrets.AZURE_AKS_CLUSTER_NAME }} primaryAgentPoolProfile=${{ env.primaryAgentPoolProfile }}
       - name: Set context to AKS
         uses: azure/aks-set-context@v1
         with:
