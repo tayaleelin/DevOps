@@ -22,24 +22,26 @@ jobs:
         run: |
           $primaryAgentPoolProfile = @{ name = "nodepool1"; count = 1; vmSize = "Standard_DS2_v2"; osType = "Linux"; osDiskSizeGB = 30; type = "VirtualMachineScaleSets"; enableAutoScaling = "true"; minCount = 1; maxCount = 3; nodeLabels = @{ "agentpool" = "primary" } } | ConvertTo-Json -Depth 10
           Write-Host "##vso[task.setvariable variable=primaryAgentPoolProfile]$primaryAgentPoolProfile"
-      - name: Create AKS Cluster
-        uses: azure/CLI@v1
-        with:
-          azcliversion: 2.29.0
-          inlineScript: |
-            az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
-            az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-            az group create --name ${{ secrets.AZURE_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
+      - name: Echo primaryAgentPoolProfile
+        run: echo ${{ env.primaryAgentPoolProfile }}
+      # - name: Create AKS Cluster
+      #   uses: azure/CLI@v1
+      #   with:
+      #     azcliversion: 2.29.0
+      #     inlineScript: |
+      #       az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+      #       az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      #       az group create --name ${{ secrets.AZURE_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
 
-            az deployment group create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --template-file ResourceModules/modules/container-service/managed-clusters/main.bicep \
-            --parameters name=${{ secrets.AZURE_AKS_CLUSTER_NAME }} primaryAgentPoolProfile=${{ env.primaryAgentPoolProfile }}
-      - name: Set context to AKS
-        uses: azure/aks-set-context@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-          cluster-name: ${{ secrets.AZURE_AKS_CLUSTER_NAME }}
-          resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+      #       az deployment group create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+      #       --template-file ResourceModules/modules/container-service/managed-clusters/main.bicep \
+      #       --parameters name=${{ secrets.AZURE_AKS_CLUSTER_NAME }} primaryAgentPoolProfile=${{ env.primaryAgentPoolProfile }}
+      # - name: Set context to AKS
+      #   uses: azure/aks-set-context@v1
+      #   with:
+      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+      #     cluster-name: ${{ secrets.AZURE_AKS_CLUSTER_NAME }}
+      #     resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
       # - name: View Kubernetes Namespaces
       #   run: kubectl get ns
       # - name: Helm install Otomi on AKS
