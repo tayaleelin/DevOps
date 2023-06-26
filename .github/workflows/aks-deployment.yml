@@ -14,7 +14,7 @@ jobs:
       - name: Create AKS Cluster
         uses: azure/CLI@v1
         with:
-          azcliversion: 2.29.0
+          azcliversion: 2.30.0
           inlineScript: |
             az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
             az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -22,9 +22,7 @@ jobs:
 
             az deployment group create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --template-file ./AzureCloud/Modules/AzureKubernetesService/Templates/aks-default.bicep \
-            --parameters namePrefix=${{ secrets.AZURE_RESOURCE_NAMEPREFIX }} \
-              servicePrincipalClientId ${{ secrets.AZURE_CLIENT_ID }} \
-              servicePrincipalClientSecret ${{ secrets.AZURE_CLIENT_SECRET }}
+            --parameters namePrefix=${{ secrets.AZURE_RESOURCE_NAMEPREFIX }} servicePrincipalClientId=${{ secrets.AZURE_CLIENT_ID }} servicePrincipalClientSecret=${{ secrets.AZURE_CLIENT_SECRET }}
       - name: Set context to AKS
         uses: azure/aks-set-context@v1
         with:
