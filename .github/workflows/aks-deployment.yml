@@ -14,18 +14,19 @@ jobs:
         with:
           ref: aks
           path: DevOps
-      - name: Checkout AzureResourceModules
-        uses: actions/checkout@v3
-        with:
-          path: AzureResourceModules
+      # - name: Checkout AzureResourceModules
+      #   uses: actions/checkout@v3
+      #   with:
+      #     path: AzureResourceModules
       - name: View directories
         # view checked out files
         run: |
           echo "View aks main from github ref: ${{ github.ref }}"
-          echo "List AzureResourceModules directory"
-          ls -al ./AzureResourceModules
+          # echo "List AzureResourceModules directory"
+          # ls -al ./AzureResourceModules
           echo "List DevOps directory"
-          la -al ./DevOps
+          ls -l ./DevOps/AzureCloud/AzureResourceModules/
+          ls -l ./DevOps/AzureCloud/Modules/AzureKubernetesService/Config/aks-default.dev.bicepparam
 
       # - name: Create AKS Cluster
       #   uses: azure/CLI@v1
