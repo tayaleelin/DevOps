@@ -3,9 +3,6 @@ run-name: ${{ github.actor }} AKS Deployment
 
 on: [push]
 
-env:
-  modulePath: ./AzureCloud/Modules/AzureKubernetesService/Templates/aks-default.bicep
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -14,10 +11,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: true
-      - name: View directories
-        run: |
-          echo "View aks main from github ref: ${{ github.ref }}"
-          ls -l ./AzureCloud/AzureResourceModules
       - name: Create AKS Cluster
         uses: azure/CLI@v1
         with:
@@ -28,7 +21,7 @@ jobs:
             az group create --name ${{ secrets.AZURE_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
 
             az deployment group create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --template-file ${{ env.ModulePath }} \
+            --template-file ./AzureCloud/Modules/AzureKubernetesService/Templates/aks-default.bicep \
             --parameters namePrefix=${{ secrets.AZURE_RESOURCE_NAMEPREFIX }} \
               servicePrincipalClientId ${{ secrets.AZURE_CLIENT_ID }} \
               servicePrincipalClientSecret ${{ secrets.AZURE_CLIENT_SECRET }}
