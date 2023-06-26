@@ -4,7 +4,8 @@ run-name: ${{ github.actor }} AKS Deployment
 on: [push]
 
 env:
-  modulePath: ResourceModules/modules/container-service/managed-clusters/main.bicep
+  modulePath: ./AzureCloud/Modules/AzureKubernetesService/Templates/aks-default.bicep
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -27,8 +28,10 @@ jobs:
             az group create --name ${{ secrets.AZURE_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
 
             az deployment group create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --template-file ./AzureCloud/Modules/AzureKubernetesService/Templates/aks-default.bicep \
+            --template-file ${{ env.ModulePath }} \
             --parameters namePrefix=${{ secrets.AZURE_RESOURCE_NAMEPREFIX }} \
+              servicePrincipalClientId ${{ secrets.AZURE_CLIENT_ID }} \
+              servicePrincipalClientSecret ${{ secrets.AZURE_CLIENT_SECRET }}
       - name: Set context to AKS
         uses: azure/aks-set-context@v1
         with:

@@ -1,4 +1,8 @@
 param namePrefix string
+@secure()
+param servicePrincipalClientId string
+@secure()
+param servicePrincipalClientSecret string
 
 param clusterName string = '${namePrefix}-aks'
 param location string = resourceGroup().location
@@ -34,6 +38,10 @@ module aks '../../../AzureResourceModules/modules/container-service/managed-clus
     name: clusterName
     params: {
         aksClusterKubernetesVersion: kubernetesVersion
+        aksServicePrincipalProfile: {
+            clientId: servicePrincipalClientId
+            clientSecret: servicePrincipalClientSecret
+        }
         name: clusterName
         location: location
         primaryAgentPoolProfile: [
