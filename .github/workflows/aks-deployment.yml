@@ -11,9 +11,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          ref: aks
       - name: View file
         # view checked out files
-        run: ls -al ./AzureCloud/AzureResourceModules/modules/container-service/managed-clusters/main.bicep
+        run: |
+          echo "View aks main from github ref: ${{ github.ref }}"
+          ls -al ./AzureCloud/AzureResourceModules/modules/container-service/managed-clusters/main.bicep
+
       # - name: Create AKS Cluster
       #   uses: azure/CLI@v1
       #   env:
