@@ -1,5 +1,4 @@
 param namePrefix string
-@secure()
 param servicePrincipalClientId string
 @secure()
 param servicePrincipalClientSecret string
