@@ -9,8 +9,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout TayaleeLin/DevOps
-        uses: actions/checkout@v3
       - name: Create AKS Cluster
         uses: azure/CLI@v1
         env:
