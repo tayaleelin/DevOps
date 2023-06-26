@@ -12,7 +12,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: View file
-        run: ls -al /AzureCloud/AzureResourceModules/modules/container-service/managed-clusters/main.bicep
+        # view checked out files
+        run: ls -al ./
       # - name: Create AKS Cluster
       #   uses: azure/CLI@v1
       #   env:
