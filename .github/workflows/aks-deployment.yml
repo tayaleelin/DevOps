@@ -22,7 +22,10 @@ jobs:
         # view checked out files
         run: |
           echo "View aks main from github ref: ${{ github.ref }}"
-          ls -al ./
+          echo "List AzureResourceModules directory"
+          ls -al ./AzureResourceModules
+          echo "List DevOps directory"
+          la -al ./DevOps
 
       # - name: Create AKS Cluster
       #   uses: azure/CLI@v1
