@@ -12,8 +12,11 @@ jobs:
       - name: Checkout TayaleeLin/DevOps
         uses: actions/checkout@v3
         with:
-          path: DevOps
           submodules: true
+      - name: View directories
+        run: |
+          echo "View aks main from github ref: ${{ github.ref }}"
+          ls -l ./AzureCloud/AzureResourceModules
       - name: Create AKS Cluster
         uses: azure/CLI@v1
         env:
