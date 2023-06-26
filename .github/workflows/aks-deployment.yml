@@ -9,15 +9,21 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout TayaleeLin/DevOps
         uses: actions/checkout@v3
         with:
           ref: aks
+          path: DevOps
+      - name: Checkout AzureResourceModules
+        uses: actions/checkout@v3
+        with:
+          path: AzureResourceModules
       - name: View file
         # view checked out files
         run: |
           echo "View aks main from github ref: ${{ github.ref }}"
-          ls -al ./AzureCloud/AzureResourceModules/modules/container-service/managed-clusters/main.bicep
+          ls -al ./DevOps/AzureCloud/Modules/AzureKubernetesService/Config/aks-default.dev.bicepparam
+          ls -al ./AzureResourceModules/modules/container-service/managed-clusters/main.bicep
 
       # - name: Create AKS Cluster
       #   uses: azure/CLI@v1
