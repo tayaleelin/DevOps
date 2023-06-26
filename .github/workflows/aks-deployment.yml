@@ -14,36 +14,25 @@ jobs:
         with:
           path: DevOps
           submodules: true
+      - name: Create AKS Cluster
+        uses: azure/CLI@v1
+        env:
+          AKS_CLUSTER_NAME: ${{ secrets.AZURE_AKS_CLUSTER_NAME }}
+        with:
+          azcliversion: 2.29.0
+          inlineScript: |
+            az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+            az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+            az group create --name ${{ secrets.AZURE_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
 
-      # - name: Checkout AzureResourceModules
-      #   uses: actions/checkout@v3
-      #   with:
-      #     path: AzureResourceModules
-      - name: View directories
-        # view checked out files
-        run: |
-          echo "View aks main from github ref: ${{ github.ref }}"
-          ls -l ./DevOps/AzureCloud/AzureResourceModules
-
-      # - name: Create AKS Cluster
-      #   uses: azure/CLI@v1
-      #   env:
-      #     AKS_CLUSTER_NAME: ${{ secrets.AZURE_AKS_CLUSTER_NAME }}
-      #   with:
-      #     azcliversion: 2.29.0
-      #     inlineScript: |
-      #       az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
-      #       az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      #       az group create --name ${{ secrets.AZURE_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
-
-      #       az deployment group create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-      #       --template-file ../AzureCloud/AzureResourceModules/modules/container-service/managed-clusters/main.bicep \
-      #       --parameter ../AzureCloud/Modules/AzureKubernetesService/Config/aks-default.dev.bicepparam
-      # - name: Set context to AKS
-      #   uses: azure/aks-set-context@v1
-      #   with:
-      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
-      #     cluster-name: ${{ secrets.AZURE_AKS_CLUSTER_NAME }}
-      #     resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
-      # - name: View Kubernetes Namespaces
-      #   run: kubectl get ns
+            az deployment group create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --template-file /AzureCloud/AzureResourceModules/modules/container-service/managed-clusters/main.bicep \
+            --parameter /AzureCloud/Modules/AzureKubernetesService/Config/aks-default.dev.bicepparam
+      - name: Set context to AKS
+        uses: azure/aks-set-context@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          cluster-name: ${{ secrets.AZURE_AKS_CLUSTER_NAME }}
+          resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+      - name: View Kubernetes Namespaces
+        run: kubectl get ns
