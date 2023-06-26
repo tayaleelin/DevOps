@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: View file
-        run: ls -al ../AzureCloud/AzureResourceModules/modules/container-service/managed-clusters/main.bicep
+        run: ls -al
       # - name: Create AKS Cluster
       #   uses: azure/CLI@v1
       #   env:
