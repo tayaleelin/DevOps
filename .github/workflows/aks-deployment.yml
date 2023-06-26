@@ -11,44 +11,25 @@ jobs:
     steps:
       - name: Checkout TayaleeLin/DevOps
         uses: actions/checkout@v3
-      - name: Checkout Azure/ResourceModules
-        uses: actions/checkout@v3
+      - name: Create AKS Cluster
+        uses: azure/CLI@v1
+        env:
+          AKS_CLUSTER_NAME: ${{ secrets.AZURE_AKS_CLUSTER_NAME }}
         with:
-          repository: Azure/ResourceModules
-          path: ResourceModules
-      # Powershell task to create the AgentPoolProfile JSON object
-      - name: Create AgentPoolProfile JSON
-        id: create-agentpool-profile
-        shell: pwsh
-        run: |
-          $primaryAgentPoolProfile = @{ name = "nodepool1"; count = 1; vmSize = "Standard_DS2_v2"; osType = "Linux"; osDiskSizeGB = 30; type = "VirtualMachineScaleSets"; enableAutoScaling = "true"; minCount = 1; maxCount = 3; nodeLabels = @{ "agentpool" = "primary" } } | ConvertTo-Json -Depth 10
-          Write-Host "{PRIMARY_AGENTPOOL_PROFILE}={$primaryAgentPoolProfile}" >> "$GITHUB_OUTPUT"
-      - name: Echo primaryAgentPoolProfile
-        run: |
-          echo "Primary Agentpool Profile: ${{ steps.create-agentpool-profile.outputs.PRIMARY_AGENTPOOL_PROFILE }}"
-      # - name: Create AKS Cluster
-      #   uses: azure/CLI@v1
-      #   with:
-      #     azcliversion: 2.29.0
-      #     inlineScript: |
-      #       az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
-      #       az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      #       az group create --name ${{ secrets.AZURE_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
+          azcliversion: 2.29.0
+          inlineScript: |
+            az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+            az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+            az group create --name ${{ secrets.AZURE_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
 
-      #       az deployment group create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-      #       --template-file ResourceModules/modules/container-service/managed-clusters/main.bicep \
-      #       --parameters name=${{ secrets.AZURE_AKS_CLUSTER_NAME }} primaryAgentPoolProfile=${{ env.primaryAgentPoolProfile }}
-      # - name: Set context to AKS
-      #   uses: azure/aks-set-context@v1
-      #   with:
-      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
-      #     cluster-name: ${{ secrets.AZURE_AKS_CLUSTER_NAME }}
-      #     resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
-      # - name: View Kubernetes Namespaces
-      #   run: kubectl get ns
-      # - name: Helm install Otomi on AKS
-      #   uses: deliverybot/helm@v1
-      #   with:
-      #     release: otomi
-      #     chart: otomi-core
-      #     namespace: otomi-system
+            az deployment group create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --template-file /AzureCloud/AzureResourceModules/modules/container-service/managed-clusters/main.bicep \
+            --parameter /AzureCloud/Modules/AzureKubernetesService/Config/aks-default.dev.bicepparam
+      - name: Set context to AKS
+        uses: azure/aks-set-context@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          cluster-name: ${{ secrets.AZURE_AKS_CLUSTER_NAME }}
+          resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+      - name: View Kubernetes Namespaces
+        run: kubectl get ns
