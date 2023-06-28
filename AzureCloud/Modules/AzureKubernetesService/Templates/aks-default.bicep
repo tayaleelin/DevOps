@@ -46,8 +46,10 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
 module aks '../../../AzureResourceModules/modules/container-service/managed-clusters/main.bicep' = {
     name: clusterName
     params: {
+        userAssignedIdentities: {
+            '${mi.name}': mi.id
+        }
         aksClusterKubernetesVersion: kubernetesVersion
-        aksServicePrincipalProfile: mi
         name: clusterName
         location: location
         primaryAgentPoolProfile: [
