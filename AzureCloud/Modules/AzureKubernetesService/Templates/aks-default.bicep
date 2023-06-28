@@ -1,7 +1,4 @@
 param namePrefix string
-param servicePrincipalClientId string
-@secure()
-param servicePrincipalClientSecret string
 
 param clusterName string = '${namePrefix}-aks'
 param location string = resourceGroup().location
@@ -13,18 +10,18 @@ param osDiskSizeGB int = 128
 
 param now string = utcNow()
 
-// resource mi 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
-//     name: '${namePrefix}-mi'
-//     location: location
-// }
+resource mi 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
+    name: '${namePrefix}-mi'
+    location: location
+}
 
-// resource assignContribRoleToMi 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-//     name: guid(mi.id, 'Microsoft.Authorization/roleAssignments')
-//     properties: {
-//         roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')
-//         principalId: mi.properties.principalId
-//     }
-// }
+resource assignContribRoleToMi 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+    name: guid(mi.id, 'Microsoft.Authorization/roleAssignments')
+    properties: {
+        roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')
+        principalId: mi.properties.principalId
+    }
+}
 
 resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
     name: '${namePrefix}-vnet'
@@ -50,10 +47,7 @@ module aks '../../../AzureResourceModules/modules/container-service/managed-clus
     name: clusterName
     params: {
         aksClusterKubernetesVersion: kubernetesVersion
-        aksServicePrincipalProfile: {
-            clientId: servicePrincipalClientId
-            clientSecret: servicePrincipalClientSecret
-        }
+        aksServicePrincipalProfile: mi
         name: clusterName
         location: location
         primaryAgentPoolProfile: [

@@ -22,8 +22,7 @@ jobs:
 
             az deployment group create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --template-file ./AzureCloud/Modules/AzureKubernetesService/Templates/aks-default.bicep \
-            --parameters namePrefix=${{ secrets.AZURE_RESOURCE_NAMEPREFIX }} \
-                servicePrincipalClientId=${{ secrets.AZURE_CLIENT_ID }} servicePrincipalClientSecret=${{ secrets.AZURE_CLIENT_SECRET }}
+            --parameters namePrefix=${{ secrets.AZURE_RESOURCE_NAMEPREFIX }}
       - name: Set context to AKS
         uses: azure/aks-set-context@v1
         with:
