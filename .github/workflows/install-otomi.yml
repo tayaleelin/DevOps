@@ -23,3 +23,15 @@ jobs:
         with:
           cluster-name: ${{ secrets.AZURE_AKS_CLUSTER_NAME }}
           resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+
+      - name: Install Otomi
+        run: |
+          helm repo add otomi https://otomi.azurecr.io/helm/v1/repo
+          helm repo update
+          helm install otomi otomi/otomi --set cluster.k8sVersion="1.25" --set cluster.name=${{ secrets.AZURE_AKS_CLUSTER_NAME }} --set cluster.provider=azure
+
+      # run kubectl
+      - name: Run kubectl
+        run: |
+          kubectl get job otomi -w
+          kubectl logs jobs/otomi -n default -f
