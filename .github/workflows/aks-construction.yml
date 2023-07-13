@@ -1,7 +1,6 @@
 name: Deploy AKS-Construction
 
-on:
-  workflow_dispatch:
+on: [push]
 
 permissions:
   id-token: write
@@ -14,7 +13,8 @@ jobs:
       templateVersion: 0.10.0
       rg: az-k8s-ldplay-rg
       resourceName: az-k8s-ldplay
-      templateParams: resourceName=az-k8s-ldplay agentCount=1 upgradeChannel=stable JustUseSystemPool=true agentCountMax=20 osDiskType=Managed osDiskSizeGB=32 custom_vnet=true enable_aad=true AksDisableLocalAccounts=true enableAzureRBAC=true adminPrincipalId=_USER_OBJECT_ID_ registries_sku=Premium acrPushRolePrincipalId=_USER_OBJECT_ID_ omsagent=true retentionInDays=30 networkPolicy=azure azurepolicy=audit authorizedIPRanges=["84.53.83.115/32"] ingressApplicationGateway=true appGWcount=0 appGWsku=WAF_v2 appGWmaxCount=10 appgwKVIntegration=true keyVaultAksCSI=true keyVaultCreate=true keyVaultOfficerRolePrincipalId=_USER_OBJECT_ID_ automationAccountScheduledStartStop=Weekday
+      templateParams: resourceName=az-k8s-ldplay agentCount=1 JustUseSystemPool=true osDiskType=Managed osDiskSizeGB=32 enableTelemetry=false automationAccountScheduledStartStop=Weekday
+      postScriptParams: "ingress=contour,monitor=oss"
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
