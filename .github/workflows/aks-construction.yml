@@ -1,11 +1,11 @@
 name: Deploy AKS-Construction
 
-on: [push]
-  # workflow_dispatch:
+on:
+  workflow_dispatch:
 
 permissions:
-      id-token: write
-      contents: read
+  id-token: write
+  contents: read
 
 jobs:
   reusable_workflow_job:
