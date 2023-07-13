@@ -24,8 +24,6 @@ jobs:
           cluster-name: ${{ secrets.AZURE_AKS_CLUSTER_NAME }}
           resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
           use-kubelogin: true
-          admin: true
-          subscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Install Otomi
         run: |
