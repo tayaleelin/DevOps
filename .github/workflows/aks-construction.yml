@@ -1,7 +1,6 @@
 name: Deploy AKS-Construction
 
-on:
-  workflow_dispatch:
+on: [push]
 
 permissions:
   id-token: write
