@@ -28,7 +28,7 @@ jobs:
     with:
       templateVersion: 0.10.0
       rg: az-k8s-ldplay-rg
-      resourceName: az-k8s-ldplay2
+      resourceName: az-k8s-ldplay
       templateParams: resourceName=az-k8s-ldplay agentCount=1 JustUseSystemPool=true osDiskType=Managed osDiskSizeGB=32 enableTelemetry=false automationAccountScheduledStartStop=Weekday
       postScriptParams: "ingress=contour,monitor=oss"
     secrets:
