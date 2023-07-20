@@ -5,7 +5,7 @@ on:
     branches:
       - "*"
     paths:
-      - "Kubernetes/Otomi/Config/**"
+      - "../Kubernetes/Otomi/Config/**"
 
 permissions:
   id-token: write
@@ -19,7 +19,6 @@ jobs:
       # - uses: azure/setup-kubectl@v1
       #   with:
       #     version: "latest"
-
       # - uses: azure/setup-helm@v1
       - uses: azure/login@v1
         with:
