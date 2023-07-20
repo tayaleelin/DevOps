@@ -2,10 +2,8 @@ name: Install Otomi
 
 on:
   push:
-    branches:
-      - "*"
     paths:
-      - "../Kubernetes/Otomi/Config/**"
+      - "Kubernetes/Otomi/Config/**"
 
 permissions:
   id-token: write
