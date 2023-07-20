@@ -1,6 +1,7 @@
 name: Install Otomi
 
-on: [push]
+on:
+  workflow_dispatch:
 
 permissions:
   id-token: write
