@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VALUES_YAML="../config/k8s/otomi/values.yaml"
+VALUES_YAML="../config/k8s/otomi/values.yaml" # add a values yaml to your repo
 OTOMI_HELM_REPO=$(helm repo list | grep otomi )
 if [ -z $OTOMI_HELM_REPO ]; then
     echo "Otomi Helm repo not found, adding"
