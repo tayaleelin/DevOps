@@ -1,0 +1,12 @@
+auth:
+  enablePostgresUser: true
+  postgresPassword: "tayaleepostgres"
+  username: "app1"
+  password: "AppPassword"
+  database: "app_db"
+
+persistence:
+  enabled: true
+  existingClaim: "postgresql-data-claim"
+volumePermissions:
+  enabled: true

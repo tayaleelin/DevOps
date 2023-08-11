@@ -1,0 +1,34 @@
+name: Deploy AKS
+run-name: ${{ github.actor }} AKS Deployment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout TayaleeLin/DevOps
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Create AKS Cluster
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.30.0
+          inlineScript: |
+            az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+            az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+            az group create --name ${{ secrets.AZURE_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
+
+            az deployment group create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --template-file ./AzureCloud/Modules/AzureKubernetesService/Templates/aks-default.bicep \
+            --parameters namePrefix=${{ secrets.AZURE_RESOURCE_NAMEPREFIX }}
+      - name: Set context to AKS
+        uses: azure/aks-set-context@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          cluster-name: ${{ secrets.AZURE_AKS_CLUSTER_NAME }}
+          resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+      - name: View Kubernetes Namespaces
+        run: kubectl get ns

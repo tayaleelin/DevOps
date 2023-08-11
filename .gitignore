@@ -5,3 +5,6 @@ venv/
 *DS_Store
 .history
 .azure
+.local
+out/
+.vscode
