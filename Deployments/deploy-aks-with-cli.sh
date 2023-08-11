@@ -1,6 +1,19 @@
 #!/bin/bash
 set -e
 
+# Login if token expired
+az account show > /dev/null || az login
+# Check if token is expired
+TOKEN_EXPIRATION_DATE=$(az account get-access-token --query "expiresOn" -o tsv)
+CURRENT_DATE=$(date +'%Y-%m-%d %H:%M:%S') 
+
+if [[ $CURRENT_DATE > $TOKEN_EXPIRATION_DATE ]]; then
+    echo "Token expired, logging in"
+    az login
+else
+    echo "Token still valid"
+fi
+
 # Example variables required for this script
 KUBERNETES_VERSION=1.25
 PREFIX=ld-play-us
