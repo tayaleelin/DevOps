@@ -2,6 +2,11 @@ name: Deploy ACI DevOps Agent
 
 on: [push]
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 # Deploy container registry to azure
 jobs:
   build-and-deploy:
