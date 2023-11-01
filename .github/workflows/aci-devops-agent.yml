@@ -4,20 +4,32 @@ on: [push]
 
 # Deploy container registry to azure
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Login via Azure CLI
+      - name: Az CLI login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-          # Create container registry
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       - name: Create container registry
         uses: azure/CLI@v1
         with:
           azcliversion: 2.0.72
           inlineScript: az acr create --resource-group ${{ secrets.ACI_RESOURCE_GROUP }} --name ${{ secrets.REGISTRY_NAME }} --sku Basic
+          # Build and push image to container registry
+      # - name: Build and push image to container registry
+      #   uses: azure/docker-login@v1
+      #   with:
+      #     login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+      #     username: ${{ secrets.REGISTRY_USERNAME }}
+      #     password: ${{ secrets.REGISTRY_PASSWORD }}
+      # - run: |
+      #     docker build -f /Deployments/DevOpsAgent/Linux/Agent.Dockerfile -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.IMAGE_NAME }}:latest
+      #     docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.IMAGE_NAME }}:latest
+      #     # Deploy ACI DevOps Agent
 #     - name: Deploy ACI DevOps Agent
 #       uses: azure/aci-deploy@v1
 #       with:
