@@ -1,0 +1,55 @@
+name: Deploy ACI DevOps Agent
+
+on: [push]
+
+# Deploy container registry to azure
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Login via Azure CLI
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      # Create resource group
+      - name: Create resource group
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.0.72
+          inlineScript: az group create --name ${{ secrets.ACI_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
+          # Create container registry
+      - name: Create container registry
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.0.72
+          inlineScript: az acr create --resource-group ${{ secrets.ACI_RESOURCE_GROUP }} --name ${{ secrets.REGISTRY_NAME }} --sku Basic
+#     - name: Deploy ACI DevOps Agent
+#       uses: azure/aci-deploy@v1
+#       with:
+#         resource-group: ${{ secrets.ACI_RESOURCE_GROUP }}
+#         dns-name-label: ${{ secrets.DNS_NAME_LABEL }}
+#         image: ${{ secrets.IMAGE_NAME }}
+#         registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+#         registry-username: ${{ secrets.REGISTRY_USERNAME }}
+#         registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+#         ports: 80
+#         environment-variables: '[
+#           {
+#             "name": "AZP_URL",
+#             "value": "https://dev.azure.com/${{ secrets.AZURE_ORGANIZATION}}"
+#           },
+#           {
+#             "name": "AZP_TOKEN",
+#             "value": "${{ secret.AZURE_PAT_TOKEN }}"
+#           },
+#           {
+#             "name": "AZP_AGENT_NAME",
+#             "value": "${{ secrets.AZURE_AGENT_NAME }}"
+#           },
+#           {
+#             "name": "AZP_POOL",
+#             "value": "${{ secrets.AZURE_AGENT_POOL_NAME }}"
+#           }
+#         ]'
+# ```
