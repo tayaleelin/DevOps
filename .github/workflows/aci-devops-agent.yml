@@ -28,7 +28,8 @@ jobs:
         with:
           azcliversion: 2.30.0
           inlineScript: |
-            az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID}}
+            az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+            az group create --name ${{ secrets.ACI_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
             az acr create --resource-group ${{ secrets.ACI_RESOURCE_GROUP }} --name ${{ secrets.REGISTRY_NAME }} --sku Basic
       # Build and push image to container registry
       # - name: Build and push image to container registry
