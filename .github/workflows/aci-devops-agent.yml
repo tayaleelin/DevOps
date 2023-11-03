@@ -8,33 +8,34 @@ permissions:
   id-token: write
 
 # Deploy container registry to azure
+# jobs:
+# deploy-resources:
+#   runs-on: ubuntu-latest
+#   environment: development
+#   steps:
+#     - name: Checkout TayaleeLin/DevOps
+#       uses: actions/checkout@v3
+#       with:
+#         submodules: true
+#     - name: Az CLI login
+#       uses: azure/login@v1
+#       with:
+#         client-id: ${{ secrets.AZURE_CLIENT_ID }}
+#         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+#         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+# - name: Create container registry
+#   uses: azure/CLI@v1
+#   with:
+#     azcliversion: 2.30.0
+#     inlineScript: |
+#       az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+#       az group create --name ${{ secrets.ACI_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
+#       az acr create --resource-group ${{ secrets.ACI_RESOURCE_GROUP }} --name ${{ secrets.REGISTRY_USERNAME }} --sku Basic
 jobs:
-  deploy-resources:
-    runs-on: ubuntu-latest
-    environment: development
-    steps:
-      - name: Checkout TayaleeLin/DevOps
-        uses: actions/checkout@v3
-        with:
-          submodules: true
-      - name: Az CLI login
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      # - name: Create container registry
-      #   uses: azure/CLI@v1
-      #   with:
-      #     azcliversion: 2.30.0
-      #     inlineScript: |
-      #       az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      #       az group create --name ${{ secrets.ACI_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
-      #       az acr create --resource-group ${{ secrets.ACI_RESOURCE_GROUP }} --name ${{ secrets.REGISTRY_USERNAME }} --sku Basic
   build-image:
     runs-on: ubuntu-latest
     environment: development
-    needs: deploy-resources
+    # needs: deploy-resources
     steps:
       - name: Checkout TayaleeLin/DevOps
         uses: actions/checkout@v3
@@ -52,8 +53,10 @@ jobs:
       #     docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.AGENT_IMAGE_NAME }}:latest
 
       - run: |
-          docker buildx build --file ${{ github.workspace }}/Deployments/DevOpsAgent/Linux/Agent.Dockerfile --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.AGENT_IMAGE_NAME }}:latest
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.AGENT_IMAGE_NAME }}:latest
+          ls -al ${{ github.workspace }}/Deployments/DevOpsAgent/Linux/Agent.Dockerfile
+
+# docker buildx build --file ${{ github.workspace }}/Deployments/DevOpsAgent/Linux/Agent.Dockerfile --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.AGENT_IMAGE_NAME }}:latest
+# docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.AGENT_IMAGE_NAME }}:latest
 
 # Deploy ACI DevOps Agent
 #     - name: Deploy ACI DevOps Agent
