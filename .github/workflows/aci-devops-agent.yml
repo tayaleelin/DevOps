@@ -34,8 +34,7 @@ jobs:
   build-image:
     runs-on: ubuntu-latest
     environment: development
-    needs:
-      - deploy-resources
+    needs: deploy-resources
     steps:
       # Build and push image to container registry
       - name: Build and push image to container registry
