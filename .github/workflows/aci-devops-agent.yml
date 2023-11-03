@@ -36,6 +36,10 @@ jobs:
     environment: development
     needs: deploy-resources
     steps:
+      - name: Checkout TayaleeLin/DevOps
+        uses: actions/checkout@v3
+        with:
+          submodules: true
       # Build and push image to container registry
       - name: Build and push image to container registry
         uses: azure/docker-login@v1
