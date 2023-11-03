@@ -52,7 +52,7 @@ jobs:
       #     docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.AGENT_IMAGE_NAME }}:latest
 
       - run: |
-          docker build --file ${{ github.workspace }}/Deployments/DevOpsAgent/Linux/Agent.Dockerfile --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.AGENT_IMAGE_NAME }}:latest
+          docker buildx build --file ${{ github.workspace }}/Deployments/DevOpsAgent/Linux/Agent.Dockerfile --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.AGENT_IMAGE_NAME }}:latest
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.AGENT_IMAGE_NAME }}:latest
 
 # Deploy ACI DevOps Agent
